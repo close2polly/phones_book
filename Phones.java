@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringJoiner;
+import java.util.stream.Collectors;
 
 public class Phones {
     public static void addNumberToBook(String key, int value, Map<String, ArrayList<Integer>> map){
@@ -15,7 +16,14 @@ public class Phones {
         }
     }
     public static void printPhonesBook(Map<String, ArrayList<Integer>> map){
-        for (var item : map.entrySet()) {
+        Map<String, ArrayList<Integer>> result = new HashMap<>(map);
+        result = result
+            .entrySet()
+            .stream()
+            .sorted((k1, k2) -> k1.getValue().size() - k2.getValue().size())
+            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (prev, next) -> next, HashMap::new));
+            
+        for (var item : result.entrySet()) {
             StringJoiner joiner = new StringJoiner(", " ,"[", "]");
             for(int el: item.getValue()){
                 joiner.add(String.valueOf(el));
@@ -32,6 +40,11 @@ public class Phones {
         addNumberToBook("Sidorov", 8956477, book);
         addNumberToBook("Ivanov", 12356233, book);
         addNumberToBook("Petrov", 787897, book);
+        addNumberToBook("Pushkin", 8978979, book);
+        addNumberToBook("Pushkin", 545454, book);
+
+        book.entrySet().stream().sorted((k1, k2) -> Integer.compare(k1.getValue().size(), k1.getValue().size()));
+        // System.out.println(book.entrySet().stream().sorted((k1, k2) -> Integer.compare(k1.getValue().size(), k1.getValue().size())));
         printPhonesBook(book);
        }
 }
